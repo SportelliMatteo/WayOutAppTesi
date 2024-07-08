@@ -1,0 +1,117 @@
+// Library import
+import React, {useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {useSelector} from 'react-redux';
+import ActionSheet from 'react-native-actions-sheet';
+
+// Local import
+import {getHeight, moderateScale} from '../../common/constants';
+import {styles} from '../../themes';
+import EText from '../common/EText';
+import strings from '../../i18n/strings';
+import EButton from '../common/EButton';
+import EDivider from '../common/EDivider';
+import MostPopularCategory from '../homeComponent/MostPopularCategory';
+import {CountryData} from '../../api/constant';
+import {Dropdown} from 'react-native-element-dropdown';
+import SliderComponent from '../homeComponent/SliderComponent';
+
+const SortAndFilter = props => {
+  const {SheetRef} = props;
+  const colors = useSelector(state => state.theme.theme);
+  const [gender, setGender] = useState('');
+
+  const onChangedGender = text => setGender(text.value.toLowerCase());
+
+  const onPressApply = () => SheetRef?.current?.hide();
+  const onPressReset = () => SheetRef?.current?.hide();
+
+  return (
+    <ActionSheet
+      ref={SheetRef}
+      gestureEnabled={true}
+      indicatorStyle={{
+        backgroundColor: colors.dark ? colors.dark3 : colors.grayScale3,
+        ...styles.actionSheetIndicator,
+      }}
+      containerStyle={[
+        localStyles.actionSheetContainer,
+        {backgroundColor: colors.backgroundColor},
+      ]}>
+      <View style={localStyles.bottomContainer}>
+        <EText type={'B22'} style={styles.mt5} align={'center'}>
+          {strings.filter}
+        </EText>
+        <EDivider style={styles.mv20} />
+        <EText type={'b18'} style={localStyles.textStyles}>
+          {strings.category}
+        </EText>
+        <View style={localStyles.categoryContainer}>
+          <MostPopularCategory />
+        </View>
+        <SliderComponent
+          startPoint={100}
+          endPoint={500}
+          maxValue={1000}
+          title={strings.priceRange}
+          subTitle1={'$'}
+        />
+        <SliderComponent
+          startPoint={5}
+          endPoint={15}
+          maxValue={70}
+          title={strings.distanceRange}
+          subTitle2={' Km'}
+        />
+        <EDivider style={styles.mb20} />
+        <View style={localStyles.btnContainer}>
+          <EButton
+            title={strings.reset}
+            type={'S16'}
+            containerStyle={localStyles.skipBtnContainer}
+            color={colors.dark ? colors.white : colors.primary5}
+            bgColor={colors.dark3}
+            onPress={onPressReset}
+          />
+          <EButton
+            title={strings.apply}
+            type={'S16'}
+            containerStyle={localStyles.skipBtnContainer}
+            onPress={onPressApply}
+          />
+        </View>
+      </View>
+    </ActionSheet>
+  );
+};
+
+const localStyles = StyleSheet.create({
+  actionSheetContainer: {
+    ...styles.ph20,
+  },
+  textStyles: {
+    ...styles.mb15,
+  },
+  categoryContainer: {
+    ...styles.mb15,
+  },
+  btnContainer: {
+    ...styles.pb30,
+    ...styles.rowSpaceAround,
+  },
+  skipBtnContainer: {
+    width: '45%',
+  },
+  bottomContainer: {
+    ...styles.pv10,
+  },
+  dropdownStyle: {
+    height: getHeight(60),
+    borderRadius: moderateScale(15),
+    borderWidth: moderateScale(1),
+    ...styles.ph25,
+    ...styles.mv10,
+  },
+});
+
+export default SortAndFilter;
