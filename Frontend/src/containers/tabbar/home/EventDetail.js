@@ -53,6 +53,7 @@ import {
 } from "react-native-alert-notification";
 
 const paymentAddress = `http://${address}:8080/payment`;
+const updatePostiEventoAddress = `http://${address}:8080/update-posti-event`;
 
 export default function EventDetail({ navigation, route }) {
   const { item } = route.params;
@@ -65,6 +66,9 @@ export default function EventDetail({ navigation, route }) {
   //Stripe
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(true);
+
+  const [manSeat, setManSeat] = useState(item.manSeat);
+  const [womanSeat, setWomanSeat] = useState(item.womanSeat);
 
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(paymentAddress, {
@@ -110,7 +114,7 @@ export default function EventDetail({ navigation, route }) {
         type: ALERT_TYPE.DANGER,
         title: "Errore",
         textBody:
-          "Si è verificato un errore durante l'inizializzazione del pagamento",
+          `Posti ${userLogged.sesso} terminati oppure errore durante l'inizializzazione del pagamento`,
       });
     }
   };
@@ -125,7 +129,7 @@ export default function EventDetail({ navigation, route }) {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Errore",
-          textBody: "Pagamento non effettuato",
+          textBody: "Pagamento non effettuato o posti esauriti",
         });
       } else {
         const user = {
@@ -137,7 +141,7 @@ export default function EventDetail({ navigation, route }) {
           _id: uuid.v4(),
           createdAt: new Date(),
           sentBy: "amministratore",
-          text: "Benvenuto " + userLogged.nome + " " + userLogged.cognome + " 🍾🕺🏻",
+          text: "Benvenuto " + userLogged.nome + " " + userLogged.cognome + ". Sei tu il creatore dell'evento e quindi il referente per tutti gli altri partecipanti! 🍾🕺🏻",
           user: user,
         };
 
@@ -181,6 +185,30 @@ export default function EventDetail({ navigation, route }) {
           });
         }
 
+        fetch(updatePostiEventoAddress, {
+          method: "POST",
+          headers: {
+            Authorization: await auth().currentUser.getIdToken(),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idEvento: item.id,
+            sesso: item.gender
+          }),
+        }).then((res) => {
+          if (res.status === 200) {
+            if (userLogged.sesso === "uomo") {
+              setManSeat(manSeat - 1);
+            } else {
+              setWomanSeat(womanSeat - 1);
+            }
+            console.log("Posti diminuiti")
+          } else {
+            console.log("errore posti diminuiti")
+          }
+        });
+
+
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Conferma",
@@ -200,6 +228,7 @@ export default function EventDetail({ navigation, route }) {
 
   useEffect(() => {
     initializePaymentSheet();
+    console.log(item)
   }, []);
 
   /*const onPressBookEvent = () => {
@@ -345,7 +374,7 @@ export default function EventDetail({ navigation, route }) {
           </View>
           <View style={{ justifyContent: "center" }}>
             <EText numberOfLines={1} type={"b18"}>
-              {item.manSeat}
+              {manSeat}
             </EText>
 
             <EText
@@ -383,7 +412,7 @@ export default function EventDetail({ navigation, route }) {
           </View>
           <View style={{ justifyContent: "center" }}>
             <EText numberOfLines={1} type={"b18"}>
-              {item.womanSeat}
+              {womanSeat}
             </EText>
 
             <EText

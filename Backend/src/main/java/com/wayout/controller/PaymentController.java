@@ -80,6 +80,14 @@ public class PaymentController {
                 prezzo = Long.parseLong(eventDb.getWomanPrice()) * 100;
             }
 
+            if(eventDb.getManSeat().equals("0")){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            if(eventDb.getWomanSeat().equals("0")){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
             // Se non trovo l'utente, rispondo con errore 5000
             if (uid == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

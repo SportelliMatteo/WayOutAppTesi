@@ -157,8 +157,8 @@ const localStyles = StyleSheet.create({
     ...styles.center,
   },
   imageStyle: {
-    height: deviceHeight - getHeight(340),
-    width: deviceWidth - moderateScale(40),
+    height: deviceHeight - getHeight(356),
+    
   },
   bottomIndicatorStyle: {
     height: moderateScale(10),

@@ -19,5 +19,9 @@ public abstract class EventDao implements Dao<Event> {
     public abstract Event findEventById(String id) throws SQLException, NullPointerException, IllegalArgumentException, IOException;
     public abstract List<Event> getActiveEventByIdUtente(String uid) throws SQLException, IOException;
     public abstract List<Event> getUnactiveEventByIdUtente(String uid) throws SQLException, IOException;
+    public abstract int getPostiUomo(String id) throws SQLException, NullPointerException, IllegalArgumentException, IOException;
+    public abstract int getPostiDonna(String id) throws SQLException, NullPointerException, IllegalArgumentException, IOException;
+    public abstract void updatePostiUomo(IdString idEvento, int postiUomo) throws SQLException;
+    public abstract void updatePostiDonna(IdString idEvento, int postidonna) throws SQLException;
 
 }

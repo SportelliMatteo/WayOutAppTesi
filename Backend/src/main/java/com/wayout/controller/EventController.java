@@ -5,8 +5,10 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import com.wayout.dao.EventDaoJDBC;
+import com.wayout.dao.UserDaoJDBC;
 import com.wayout.firebase.Firebase;
 import com.wayout.model.Event;
+import com.wayout.model.User;
 import com.wayout.model.domain.Club.ClubName;
 import com.wayout.model.domain.Common.*;
 import com.wayout.model.domain.Event.*;
@@ -315,15 +317,60 @@ public class EventController {
             response.setStatus(Protocol.SERVER_ERROR);
             resp.put("msg", "Errore server");
             return resp;
-        } catch (FirebaseAuthException e) {
-            throw new RuntimeException(e);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
+        } catch (FirebaseAuthException | MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @PostMapping("/update-posti-event")
+    public JSONObject updateEvent(@RequestBody JSONObject obj, HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("ciao");
+        String token = request.getHeader("Authorization");
+        JSONObject resp = new JSONObject();
+        try {
+            FirebaseToken decodedToken = Firebase.getInstance().getAuth().verifyIdToken(token);
+            String uid = decodedToken.getUid();
+            UserRecord user = Firebase.getInstance().getAuth().getUser(uid);
+
+            // se non trovo l'utente, rispondo con error 5000
+            if (uid == null) {
+                response.setStatus(Protocol.INVALID_TOKEN);
+                resp.put("msg", "Il token non è valido");
+
+                return resp;
+            }
+
+            IdString idEvento = new IdString((String) obj.get("idEvento"));
+            User userDb = UserDaoJDBC.getInstance().findUserByUid(uid);
+            System.out.println(userDb.getSesso());
+
+            if(userDb.getSesso().equals("uomo")){
+                int postiUomoAttuali = EventDaoJDBC.getInstance().getPostiUomo(String.valueOf(idEvento));
+                System.out.println(postiUomoAttuali);
+                int nuoviPostiUomo = postiUomoAttuali -1;
+                System.out.println(nuoviPostiUomo);
+                EventDaoJDBC.getInstance().updatePostiUomo(idEvento, nuoviPostiUomo);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+            }else{
+                int postiDonnaAttuali = EventDaoJDBC.getInstance().getPostiDonna(String.valueOf(idEvento));
+                int nuoviPostiDonna = postiDonnaAttuali -1;
+                EventDaoJDBC.getInstance().updatePostiDonna(idEvento, nuoviPostiDonna);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+            }
+
+            return resp;
+        } catch (IllegalArgumentException | NullPointerException e) {
+            response.setStatus(Protocol.SERVER_ERROR);
+            resp.put("msg", "Errore server");
+            return resp;
+        } catch (FirebaseAuthException | IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
+
 
 }

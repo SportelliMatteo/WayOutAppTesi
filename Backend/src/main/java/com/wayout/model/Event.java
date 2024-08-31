@@ -169,6 +169,8 @@ public class Event {
         event.setDate(new Date(rs.getString("data")));
         event.setManPrice(new Price(rs.getString("prezzouomo")));
         event.setWomanPrice(new Price(rs.getString("prezzodonna")));
+        event.setManSeat(new Seat(rs.getString("postiuomo")));
+        event.setWomanSeat(new Seat(rs.getString("postidonna")));
         event.setCity(city);
         event.setClub(club);
 

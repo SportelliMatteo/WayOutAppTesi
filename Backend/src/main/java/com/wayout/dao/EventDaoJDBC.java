@@ -2,8 +2,7 @@ package com.wayout.dao;
 
 import com.wayout.model.Event;
 import com.wayout.model.User;
-import com.wayout.model.domain.Common.CityName;
-import com.wayout.model.domain.Common.IdString;
+import com.wayout.model.domain.Common.*;
 import com.wayout.model.domain.User.Uid;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,9 +23,13 @@ public class EventDaoJDBC extends  EventDao {
     private String getAllEventsByCityQuery = "SELECT E.*, C.nome AS nome_citta, C.latitudine AS latitudine_citta, C.longitudine AS longitudine_citta, C.id AS id_citta, CC.id AS id_club, CC.citta AS citta_club, CC.nomeclub AS nome_club, CC.indirizzo AS indirizzo_club, CC.latitudine AS latitudine_club, CC.longitudine AS longitudine_club, U.nome AS nome_utente, U.cognome AS cognome_utente, U.uid AS uid_utente FROM evento AS E JOIN citta AS C ON E.citta_club = C.id JOIN club AS CC ON E.club  = CC.id JOIN utente as U on E.id_utente = U.id WHERE C.nome=? AND E.approvato = true OR E.citta=?";
     private String findNumberEventsActiveByUserQuery = "select count(*) as numero_eventi_approvati from evento where id_utente=? and approvato = true";
     private String findNumberEventsUnActiveByUserQuery = "select count(*) as numero_eventi_in_attesa from evento where id_utente =? and approvato = false";
-    private String findEventByIdQuery = "SELECT E.id, E.id_utente, E.tipologiaevento, E.nomeevento, E.citta_club, E.club, E.indirizzo, E.data, E.prezzouomo, E.prezzodonna , C.nome AS nome_citta, C.latitudine AS latitudine_citta, C.longitudine AS longitudine_citta, C.id AS id_citta, CC.id AS id_club, CC.citta AS citta_club, CC.nomeclub AS nome_club, CC.indirizzo AS indirizzo_club, CC.latitudine AS latitudine_club, CC.longitudine AS longitudine_club FROM evento AS E JOIN citta AS C ON E.citta_club = C.id JOIN club AS CC ON E.club = CC.id WHERE E.id = ?";
+    private String findEventByIdQuery = "SELECT E.id, E.id_utente, E.tipologiaevento, E.nomeevento, E.citta_club, E.club, E.indirizzo, E.data, E.prezzouomo, E.prezzodonna, E.postiuomo, E.postidonna , C.nome AS nome_citta, C.latitudine AS latitudine_citta, C.longitudine AS longitudine_citta, C.id AS id_citta, CC.id AS id_club, CC.citta AS citta_club, CC.nomeclub AS nome_club, CC.indirizzo AS indirizzo_club, CC.latitudine AS latitudine_club, CC.longitudine AS longitudine_club FROM evento AS E JOIN citta AS C ON E.citta_club = C.id JOIN club AS CC ON E.club = CC.id WHERE E.id = ?";
     private String getActiveEventByIdUtente = "SELECT E.*, C.nome AS nome_citta, C.latitudine AS latitudine_citta, C.longitudine AS longitudine_citta, C.id AS id_citta, CC.id AS id_club, CC.citta AS citta_club, CC.nomeclub AS nome_club, CC.indirizzo AS indirizzo_club, CC.latitudine AS latitudine_club, CC.longitudine AS longitudine_club, U.nome AS nome_utente, U.cognome AS cognome_utente, U.uid AS uid_utente FROM evento AS E JOIN citta AS C ON E.citta_club = C.id JOIN club AS CC ON E.club  = CC.id JOIN utente as U on E.id_utente = U.id WHERE U.uid =? and E.approvato = true";
     private String getUnactiveEventByIdUtente = "SELECT E.*, C.nome AS nome_citta, C.latitudine AS latitudine_citta, C.longitudine AS longitudine_citta, C.id AS id_citta, CC.id AS id_club, CC.citta AS citta_club, CC.nomeclub AS nome_club, CC.indirizzo AS indirizzo_club, CC.latitudine AS latitudine_club, CC.longitudine AS longitudine_club, U.nome AS nome_utente, U.cognome AS cognome_utente, U.uid AS uid_utente FROM evento AS E JOIN citta AS C ON E.citta_club = C.id JOIN club AS CC ON E.club  = CC.id JOIN utente as U on E.id_utente = U.id WHERE U.uid =? and E.approvato = false";
+    private String getPostiUomo = "select postiuomo from evento where id=?";
+    private String getPostiDonna = "select postidonna from evento where id=?";
+    private String updatePostiUomo = "update evento set postiuomo=? where id=?";
+    private String updatePostiDonna = "update evento set postidonna=? where id=?";
     private EventDaoJDBC(){
     }
 
@@ -187,6 +190,58 @@ public class EventDaoJDBC extends  EventDao {
         rs.close();
 
         return events;
+    }
+
+    @Override
+    public int getPostiUomo(String id) throws SQLException, NullPointerException, IllegalArgumentException, IOException {
+        PreparedStatement stm = DBConnection.getInstance().getConnection().prepareStatement(getPostiUomo);
+        stm.setString(1, id);
+
+        ResultSet rs = stm.executeQuery();
+        int postiuomo = 0;
+        if (rs.next()) {
+            postiuomo = rs.getInt("postiuomo");
+        }
+
+        rs.close();
+        stm.close();
+
+        return postiuomo;
+    }
+    @Override
+    public int getPostiDonna(String id) throws SQLException, NullPointerException, IllegalArgumentException, IOException {
+        PreparedStatement stm = DBConnection.getInstance().getConnection().prepareStatement(getPostiDonna);
+        stm.setString(1, id);
+
+        ResultSet rs = stm.executeQuery();
+        int postidonna = 0;
+        if (rs.next()) {
+            postidonna = rs.getInt("postidonna");
+        }
+
+        rs.close();
+        stm.close();
+
+        return postidonna;
+    }
+
+    @Override
+    public void updatePostiUomo(IdString idEvento, int postiUomo) throws SQLException {
+        PreparedStatement stm = DBConnection.getInstance().getConnection().prepareStatement(updatePostiUomo);
+        stm.setInt(1, postiUomo);
+        stm.setString(2, String.valueOf(idEvento));
+
+        stm.execute();
+        stm.close();
+    }
+    @Override
+    public void updatePostiDonna(IdString idEvento, int postidonna) throws SQLException {
+        PreparedStatement stm = DBConnection.getInstance().getConnection().prepareStatement(updatePostiDonna);
+        stm.setInt(1, postidonna);
+        stm.setString(2, String.valueOf(idEvento));
+
+        stm.execute();
+        stm.close();
     }
 
 }

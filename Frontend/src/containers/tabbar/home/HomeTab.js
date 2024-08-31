@@ -1,16 +1,13 @@
-// Library Imports
-import { StyleSheet, View, RefreshControl, ScrollView } from "react-native";
 import React, { useState, useEffect, useCallback, useContext } from "react";
+import { StyleSheet, View, RefreshControl, ScrollView } from "react-native";
 import { useSelector } from "react-redux";
 import { FlashList } from "@shopify/flash-list";
 import { useNavigation } from "@react-navigation/native";
-// Custom Imports
 import { styles } from "../../../themes";
 import { EventData } from "../../../api/constant";
 import SearchComponent from "../../../components/homeComponent/SearchComponent";
 import HomeHeader from "../../../components/homeComponent/HomeHeader";
 import SubHeader from "../../../components/SubHeader";
-//import MostPopularCategory from '../../../components/homeComponent/MostPopularCategory';
 import { StackNav } from "../../../navigation/NavigationKeys";
 import strings from "../../../i18n/strings";
 import CardComponent from "../../../components/homeComponent/CardComponent";
@@ -28,9 +25,9 @@ const getAllEventsByCityAddress = `http://${address}:8080/get-all-events-by-city
 
 export default function HomeTab() {
   const colors = useSelector((state) => state.theme.theme);
-
   const { userLogged } = useContext(UserLoggedContext);
   const [events, setEvents] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(""); // Stato per la stringa di ricerca
 
   const getAllEventsByCity = async () => {
     fetch(getAllEventsByCityAddress, {
@@ -61,7 +58,7 @@ export default function HomeTab() {
     }
   }, [userLogged]);
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -73,6 +70,11 @@ export default function HomeTab() {
       getAllEventsByCity().then(() => setRefreshing(false));
     }
   }, [refreshing]);
+
+  // Filtra gli eventi in base alla stringa di ricerca
+  const filteredEvents = events.filter((event) =>
+    event.eventName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const renderCategoryItem = ({ item, index }) => {
     return <CardComponent item={item} key={index} />;
@@ -88,12 +90,17 @@ export default function HomeTab() {
         }
       >
         <FlashList
-          data={events}
+          data={filteredEvents} // Usa gli eventi filtrati
           renderItem={renderCategoryItem}
           keyExtractor={(item, index) => index.toString()}
           estimatedItemSize={10}
           numColumns={1}
-          ListHeaderComponent={<RenderHeaderItem />}
+          ListHeaderComponent={
+            <RenderHeaderItem
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
+          }
           showsVerticalScrollIndicator={false}
           contentContainerStyle={localStyles.contentContainerStyle}
         />
@@ -102,11 +109,17 @@ export default function HomeTab() {
   );
 }
 
-const RenderHeaderItem = React.memo(() => {
+const RenderHeaderItem = React.memo(({ searchQuery, setSearchQuery }) => {
   const navigation = useNavigation();
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(searchQuery);
 
-  const onSearchInput = useCallback((text) => setSearch(text), []);
+  const onSearchInput = useCallback(
+    (text) => {
+      setSearch(text);
+      setSearchQuery(text); // Aggiorna la stringa di ricerca nel componente padre
+    },
+    [setSearchQuery]
+  );
 
   const { userLogged } = useContext(UserLoggedContext);
 

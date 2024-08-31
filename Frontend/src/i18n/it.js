@@ -51,7 +51,7 @@ export default {
     tickets: 'Ticket',
     featured: 'Eventi a',
     popularEvent: 'Eventi popolari 🔥', // In base al numero di persone che partecipano all'evento
-    searchPlaceholder1: 'In quale città vuoi divertirti?',
+    searchPlaceholder1: 'Cerca evento...',
     searchPlaceholder2: 'Cerca amici',
     new: 'New',
     empty: 'Empty',
