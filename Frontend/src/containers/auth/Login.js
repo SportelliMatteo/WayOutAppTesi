@@ -550,7 +550,7 @@ const localStyles = StyleSheet.create({
   },
 
   logo: {
-    width: moderateScale(300),
+    width: moderateScale(305),
     height: moderateScale(92),
     marginTop: 50,
     marginBottom: 50,

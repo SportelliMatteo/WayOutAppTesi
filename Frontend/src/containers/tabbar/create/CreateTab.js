@@ -26,6 +26,7 @@ import CoverImage from "../../../components/models/CoverImage";
 import auth from "@react-native-firebase/auth";
 import { address } from "../../../assets/globalVar";
 import { UserLoggedContext } from "../../../context/UserLoggedContext";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import {
   ALERT_TYPE,
   Dialog,
@@ -138,7 +139,7 @@ const CreateTab = (props) => {
 
   //PUBBLICA EVENTO
   const onPressContinue = async () => {
-    setLoading(true)
+    setLoading(true);
     if (
       isEmpty(eventName) ||
       isEmpty(drinkPreferences) ||
@@ -153,16 +154,16 @@ const CreateTab = (props) => {
         title: "Errore",
         textBody: "Alcuni campi sono vuoti",
       });
-      setLoading(false)
+      setLoading(false);
       return;
     }
-    if(manPrice === "0" || womanPrice === "0"){
+    if (manPrice === "0" || womanPrice === "0") {
       Toast.show({
         type: ALERT_TYPE.DANGER,
         title: "Errore",
         textBody: "L'importo inserito deve essere almeno di 1 euro",
       });
-      setLoading(false)
+      setLoading(false);
       return;
     }
     if (isEmpty(selectImage)) {
@@ -171,7 +172,7 @@ const CreateTab = (props) => {
         title: "Errore",
         textBody: "La copertina è obbligatoria",
       });
-      setLoading(false)
+      setLoading(false);
       return;
     }
     if (isCheck) {
@@ -180,7 +181,7 @@ const CreateTab = (props) => {
         title: "Errore",
         textBody: "Devi accettare termini e condizioni per proseguire",
       });
-      setLoading(false)
+      setLoading(false);
       return;
     }
     fetch(createEventAddress, {
@@ -228,14 +229,14 @@ const CreateTab = (props) => {
         setManPrice("");
         setWomanSeats("");
         setWomanPrice("");
-        setLoading(false)
+        setLoading(false);
       } else {
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Errore",
           textBody: "Errore interno, riprova più tardi.",
         });
-        setLoading(false)
+        setLoading(false);
       }
     });
   };
@@ -297,332 +298,347 @@ const CreateTab = (props) => {
   return (
     <AlertNotificationRoot>
       <ESafeAreaView>
-        <KeyBoardAvoidWrapper
+        <KeyboardAwareScrollView
           containerStyle={[styles.ph20, { marginBottom: 20 }]}
-  >
-          <EText
-            numberOfLines={1}
-            style={[styles.pr10, styles.mr10, styles.mt15, styles.mb10]}
-            type={"B22"}
-          >
-            {strings.createEvent}
-          </EText>
-
-          {/*COVER*/}
-          <TouchableOpacity
-            onPress={onPressCoverImage}
-            style={[styles.selfCenter, styles.mb20]}
-          >
-            {!!selectImage?.path ? (
-              <Image
-                source={{ uri: selectImage?.path }}
-                style={localStyles.coverImage}
-              />
-            ) : (
-              <View
-                style={[
-                  localStyles.coverImage,
-                  {
-                    borderColor: colors.dark
-                      ? colors.grayScale8
-                      : colors.grayScale3,
-                  },
-                ]}
-              >
-                <Ionicons
-                  name="cloud-upload-outline"
-                  size={moderateScale(20)}
-                  color={colors.grayScale5}
-                  style={styles.mr5}
-                />
-                <EText type={"B14"} color={colors.grayScale5}>
-                  {strings.uploadCoverImage}
-                </EText>
-              </View>
-            )}
-          </TouchableOpacity>
-
-          {/*TIPOLOGIA EVENTO*/}
-          <Dropdown
-            style={[
-              localStyles.dropdownStyle,
-              {
-                backgroundColor: colors.inputBg,
-                borderColor: colors.bColor,
-                color: colors.white,
-              },
-            ]}
-            placeholderStyle={{ color: colors.grayScale5 }}
-            data={EventType}
-            maxHeight={moderateScale(180)}
-            labelField="label"
-            valueField="value"
-            placeholder={strings.eventType}
-            value={eventType}
-            itemTextStyle={{
-              color: colors.textColor,
-              fontSize: moderateScale(16),
-            }}
-            onChange={onChangedEventType}
-            selectedTextStyle={{
-              color: colors.textColor,
-            }}
-            itemContainerStyle={{
-              backgroundColor: colors.inputBg,
-              borderRadius: 20,
-            }}
-            containerStyle={{
-              borderRadius: 20,
-              backgroundColor: colors.inputBg,
-              borderColor: "transparent",
-            }}
-            activeColor={colors.inputBg}
-          />
-
-          {/*NOME EVENTO*/}
-          <EInput
-            placeHolder={strings.eventName}
-            _value={eventName}
-            autoCapitalize={"none"}
-            toGetTextFieldValue={onChangedEventName}
-            inputContainerStyle={[
-              { backgroundColor: colors.inputBg },
-              localStyles.inputContainerStyle,
-            ]}
-            _maxLength={50}
-          />
-
-          {/* Mostra il dropdown dei club e delle città solo se eventType è "tavolo" */}
-          {eventType === "tavolo" && (
-            <>
-              {/* Dropdown per la città */}
-              <Dropdown
-                style={[
-                  localStyles.dropdownStyle,
-                  {
-                    backgroundColor: colors.inputBg,
-                    borderColor: colors.bColor,
-                    color: colors.white,
-                  },
-                ]}
-                placeholderStyle={{ color: colors.grayScale5 }}
-                data={cities}
-                maxHeight={moderateScale(180)}
-                labelField="label"
-                valueField="value"
-                placeholder={strings.city}
-                value={cityClub}
-                itemTextStyle={{
-                  color: colors.textColor,
-                  fontSize: moderateScale(16),
-                }}
-                onChange={onChangedCity}
-                selectedTextStyle={{
-                  color: colors.textColor,
-                }}
-                itemContainerStyle={{
-                  backgroundColor: colors.inputBg,
-                  borderRadius: 20,
-                }}
-                containerStyle={{
-                  borderRadius: 20,
-                  backgroundColor: colors.inputBg,
-                  borderColor: "transparent",
-                }}
-                activeColor={colors.inputBg}
-              />
-
-              {/* Dropdown per il club */}
-              <Dropdown
-                style={[
-                  localStyles.dropdownStyle,
-                  {
-                    backgroundColor: colors.inputBg,
-                    borderColor: colors.bColor,
-                    color: colors.white,
-                  },
-                ]}
-                placeholderStyle={{ color: colors.grayScale5 }}
-                data={clubs}
-                maxHeight={moderateScale(180)}
-                labelField="label"
-                valueField="value"
-                placeholder={strings.chooseClub}
-                value={club}
-                itemTextStyle={{
-                  color: colors.textColor,
-                  fontSize: moderateScale(16),
-                }}
-                onChange={onChangedClub}
-                selectedTextStyle={{
-                  color: colors.textColor,
-                }}
-                itemContainerStyle={{
-                  backgroundColor: colors.inputBg,
-                  borderRadius: 20,
-                }}
-                containerStyle={{
-                  borderRadius: 20,
-                  backgroundColor: colors.inputBg,
-                  borderColor: "transparent",
-                }}
-                activeColor={colors.inputBg}
-              />
-            </>
-          )}
-
-          {/* Mostra il GooglePlacesAutocomplete solo se eventType non è "tavolo" */}
-          {eventType !== "tavolo" && (
-            <ScrollView keyboardShouldPersistTaps="handled" horizontal>
-              <GooglePlacesAutocomplete
-                placeholder="Città o indirizzo"
-                enablePoweredByContainer={false}
-                GooglePlacesDetailsQuery={{ fields: "geometry" }}
-                fetchDetails={true}
-                onPress={handlePlaceSelect}
-                query={{
-                  key: process.env.GOOGLEAPIKEY,
-                  language: "it",
-                }}
-                styles={{
-                  textInput: {
-                    backgroundColor: "transparent",
-                    fontSize: 16,
-                    marginTop: 5,
-                    color: colors.textColor,
-                  },
-                  separator: {
-                    backgroundColor: "transparent",
-                  },
-                  description: {
-                    color: colors.textColor,
-                  },
-                  row: {
-                    backgroundColor: colors.inputBg,
-                    borderRadius: 5,
-                  },
-                }}
-                textInputProps={{
-                  InputComp: EInput,
-                  autoCapitalize: "none",
-                  _maxLength: 20,
-                  inputContainerStyle: [
-                    { backgroundColor: colors.inputBg, width: getWidth(380) },
-                    localStyles.inputContainerStyle,
-                  ],
-                }}
-              />
-            </ScrollView>
-          )}
-
-          {/*PREFERENZE SUI DRINK*/}
-          <EInput
-            placeHolder={strings.drinkPreferences}
-            _value={drinkPreferences}
-            autoCapitalize={"none"}
-            toGetTextFieldValue={onChangedDrinkPreferences}
-            inputContainerStyle={[
-              { backgroundColor: colors.inputBg },
-              localStyles.inputContainerStyle,
-            ]}
-            _maxLength={50}
-          />
-
-          {/*DATA*/}
-          <TouchableOpacity
-            onPress={onPressCalender}
-            style={[
-              localStyles.dobStyle,
-              { borderColor: colors.bColor, backgroundColor: colors.inputBg },
-            ]}
-          >
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={{ alignItems: "center" }}>
             <EText
-              type={"r16"}
-              color={eventDate ? colors.textColor : colors.grayScale5}
+              numberOfLines={1}
+              style={[styles.pr10, styles.mr10, styles.mt15, styles.mb10]}
+              type={"B22"}
             >
-              {eventDate ? eventDate : strings.eventDate}
+              {strings.createEvent}
             </EText>
-            <Ionicons
-              name="calendar"
-              size={moderateScale(20)}
-              color={colors.grayScale5}
-              style={styles.mr5}
-            />
-          </TouchableOpacity>
-          <DateTimePickerModal
-            isVisible={datePickerVisible}
-            mode="date"
-            onConfirm={handleDateConfirm}
-            onCancel={hideDatePicker}
-            date={new Date()}
-            minimumDate={new Date()}
-            confirmTextIOS={strings.confirm}
-            cancelTextIOS={strings.cancel}
-          />
 
-          <View style={localStyles.inputRow}>
-            {/*POSTI UOMO*/}
+            {/*COVER*/}
+            <TouchableOpacity
+              onPress={onPressCoverImage}
+              style={[styles.selfCenter, styles.mb20]}
+            >
+              {!!selectImage?.path ? (
+                <Image
+                  source={{ uri: selectImage?.path }}
+                  style={localStyles.coverImage}
+                />
+              ) : (
+                <View
+                  style={[
+                    localStyles.coverImage,
+                    {
+                      borderColor: colors.dark
+                        ? colors.grayScale8
+                        : colors.grayScale3,
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name="cloud-upload-outline"
+                    size={moderateScale(20)}
+                    color={colors.grayScale5}
+                    style={styles.mr5}
+                  />
+                  <EText type={"B14"} color={colors.grayScale5}>
+                    {strings.uploadCoverImage}
+                  </EText>
+                </View>
+              )}
+            </TouchableOpacity>
+
+            {/*TIPOLOGIA EVENTO*/}
+            <Dropdown
+              style={[
+                localStyles.dropdownStyle,
+                {
+                  backgroundColor: colors.inputBg,
+                  borderColor: colors.bColor,
+                  color: colors.white,
+                  width: "90%",
+                },
+              ]}
+              placeholderStyle={{ color: colors.grayScale5 }}
+              data={EventType}
+              maxHeight={moderateScale(180)}
+              labelField="label"
+              valueField="value"
+              placeholder={strings.eventType}
+              value={eventType}
+              itemTextStyle={{
+                color: colors.textColor,
+                fontSize: moderateScale(16),
+              }}
+              onChange={onChangedEventType}
+              selectedTextStyle={{
+                color: colors.textColor,
+              }}
+              itemContainerStyle={{
+                backgroundColor: colors.inputBg,
+                borderRadius: 20,
+              }}
+              containerStyle={{
+                borderRadius: 20,
+                backgroundColor: colors.inputBg,
+                borderColor: "transparent",
+              }}
+              activeColor={colors.inputBg}
+            />
+
+            {/*NOME EVENTO*/}
             <EInput
-              placeHolder={strings.manSeats}
-              keyBoardType={"number-pad"}
-              _value={manSeats}
+              placeHolder={strings.eventName}
+              _value={eventName}
               autoCapitalize={"none"}
-              toGetTextFieldValue={onChangedManSeats}
+              toGetTextFieldValue={onChangedEventName}
               inputContainerStyle={[
-                { backgroundColor: colors.inputBg, marginRight: 10 },
-                localStyles.inputContainerPriceAndSeatsStyle,
-                localStyles.inputHalfWidth,
+                { backgroundColor: colors.inputBg, width: "90%" },
+                localStyles.inputContainerStyle,
               ]}
               _maxLength={50}
             />
 
-            {/*PREZZO UOMO*/}
+            {/* Mostra il dropdown dei club e delle città solo se eventType è "tavolo" */}
+            {eventType === "tavolo" && (
+              <>
+                {/* Dropdown per la città */}
+                <Dropdown
+                  style={[
+                    localStyles.dropdownStyle,
+                    {
+                      backgroundColor: colors.inputBg,
+                      borderColor: colors.bColor,
+                      color: colors.white,
+                      width: "90%",
+                    },
+                  ]}
+                  placeholderStyle={{ color: colors.grayScale5 }}
+                  data={cities}
+                  maxHeight={moderateScale(180)}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={strings.city}
+                  value={cityClub}
+                  itemTextStyle={{
+                    color: colors.textColor,
+                    fontSize: moderateScale(16),
+                  }}
+                  onChange={onChangedCity}
+                  selectedTextStyle={{
+                    color: colors.textColor,
+                  }}
+                  itemContainerStyle={{
+                    backgroundColor: colors.inputBg,
+                    borderRadius: 20,
+                  }}
+                  containerStyle={{
+                    borderRadius: 20,
+                    backgroundColor: colors.inputBg,
+                    borderColor: "transparent",
+                  }}
+                  activeColor={colors.inputBg}
+                />
+
+                {/* Dropdown per il club */}
+                <Dropdown
+                  style={[
+                    localStyles.dropdownStyle,
+                    {
+                      backgroundColor: colors.inputBg,
+                      borderColor: colors.bColor,
+                      color: colors.white,
+                      width: "90%",
+                    },
+                  ]}
+                  placeholderStyle={{ color: colors.grayScale5 }}
+                  data={clubs}
+                  maxHeight={moderateScale(180)}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={strings.chooseClub}
+                  value={club}
+                  itemTextStyle={{
+                    color: colors.textColor,
+                    fontSize: moderateScale(16),
+                  }}
+                  onChange={onChangedClub}
+                  selectedTextStyle={{
+                    color: colors.textColor,
+                  }}
+                  itemContainerStyle={{
+                    backgroundColor: colors.inputBg,
+                    borderRadius: 20,
+                  }}
+                  containerStyle={{
+                    borderRadius: 20,
+                    backgroundColor: colors.inputBg,
+                    borderColor: "transparent",
+                  }}
+                  activeColor={colors.inputBg}
+                />
+              </>
+            )}
+
+            {/* Mostra il GooglePlacesAutocomplete solo se eventType non è "tavolo" */}
+            {eventType !== "tavolo" && (
+              <ScrollView keyboardShouldPersistTaps="handled">
+                <GooglePlacesAutocomplete
+                  placeholder="Città o indirizzo"
+                  enablePoweredByContainer={false}
+                  GooglePlacesDetailsQuery={{ fields: "geometry" }}
+                  fetchDetails={true}
+                  onPress={handlePlaceSelect}
+                  query={{
+                    key: process.env.GOOGLEAPIKEY,
+                    language: "it",
+                  }}
+                  styles={{
+                    textInput: {
+                      backgroundColor: "transparent",
+                      fontSize: 16,
+                      marginTop: 5,
+                      color: colors.textColor,
+                      width: getWidth(380)
+                    },
+                    separator: {
+                      backgroundColor: "transparent",
+                    },
+                    description: {
+                      color: colors.textColor,
+                    },
+                    row: {
+                      backgroundColor: colors.inputBg,
+                      borderRadius: 5,
+                    },
+                    listView: {
+                      width: getWidth(380)
+                    },
+                    row: {
+                      backgroundColor: 'transparent',
+                      width: getWidth(380)
+                    },
+                  }}
+                  
+                  textInputProps={{
+                    InputComp: EInput,
+                    autoCapitalize: "none",
+                    _maxLength: 20,
+                    inputContainerStyle: [
+                      { backgroundColor: colors.inputBg, width: getWidth(380) },
+                      localStyles.inputContainerStyle,
+                    ],
+                  }}
+                />
+              </ScrollView>
+            )}
+
+            {/*PREFERENZE SUI DRINK*/}
             <EInput
-              placeHolder={strings.manPrice}
-              keyBoardType={"number-pad"}
-              _value={manPrice}
+              placeHolder={strings.drinkPreferences}
+              _value={drinkPreferences}
               autoCapitalize={"none"}
-              toGetTextFieldValue={onChangedManPrice}
+              toGetTextFieldValue={onChangedDrinkPreferences}
               inputContainerStyle={[
-                { backgroundColor: colors.inputBg },
-                localStyles.inputContainerPriceAndSeatsStyle,
-                localStyles.inputHalfWidth,
+                { backgroundColor: colors.inputBg, width: "90%" },
+                localStyles.inputContainerStyle,
               ]}
               _maxLength={50}
             />
+
+            {/*DATA*/}
+            <TouchableOpacity
+              onPress={onPressCalender}
+              style={[
+                localStyles.dobStyle,
+                { borderColor: colors.bColor, backgroundColor: colors.inputBg, width: "90%" },
+              ]}
+            >
+              <EText
+                type={"r16"}
+                color={eventDate ? colors.textColor : colors.grayScale5}
+              >
+                {eventDate ? eventDate : strings.eventDate}
+              </EText>
+              <Ionicons
+                name="calendar"
+                size={moderateScale(20)}
+                color={colors.grayScale5}
+                style={styles.mr5}
+              />
+            </TouchableOpacity>
+            <DateTimePickerModal
+              isVisible={datePickerVisible}
+              mode="date"
+              onConfirm={handleDateConfirm}
+              onCancel={hideDatePicker}
+              date={new Date()}
+              minimumDate={new Date()}
+              confirmTextIOS={strings.confirm}
+              cancelTextIOS={strings.cancel}
+            />
+
+            <View style={localStyles.inputRow}>
+              {/*POSTI UOMO*/}
+              <EInput
+                placeHolder={strings.manSeats}
+                keyBoardType={"number-pad"}
+                _value={manSeats}
+                autoCapitalize={"none"}
+                toGetTextFieldValue={onChangedManSeats}
+                inputContainerStyle={[
+                  { backgroundColor: colors.inputBg, marginRight: 10 },
+                  localStyles.inputContainerPriceAndSeatsStyle,
+                  localStyles.inputHalfWidth,
+                ]}
+                _maxLength={50}
+              />
+
+              {/*PREZZO UOMO*/}
+              <EInput
+                placeHolder={strings.manPrice}
+                keyBoardType={"number-pad"}
+                _value={manPrice}
+                autoCapitalize={"none"}
+                toGetTextFieldValue={onChangedManPrice}
+                inputContainerStyle={[
+                  { backgroundColor: colors.inputBg },
+                  localStyles.inputContainerPriceAndSeatsStyle,
+                  localStyles.inputHalfWidth,
+                ]}
+                _maxLength={50}
+              />
+            </View>
+
+            <View style={localStyles.inputRow}>
+              {/*POSTI DONNA*/}
+              <EInput
+                placeHolder={strings.womanSeats}
+                keyBoardType={"number-pad"}
+                _value={womanSeats}
+                autoCapitalize={"none"}
+                toGetTextFieldValue={onChangedWomanSeats}
+                inputContainerStyle={[
+                  { backgroundColor: colors.inputBg, marginRight: 10, marginBottom:20 },
+                  localStyles.inputContainerPriceAndSeatsStyle,
+                  localStyles.inputHalfWidth,
+                ]}
+                _maxLength={50}
+              />
+              {/*PREZZO DONNA*/}
+              <EInput
+                placeHolder={strings.womanPrice}
+                keyBoardType={"number-pad"}
+                _value={womanPrice}
+                autoCapitalize={"none"}
+                toGetTextFieldValue={onChangedWomanPrice}
+                inputContainerStyle={[
+                  { backgroundColor: colors.inputBg },
+                  localStyles.inputContainerPriceAndSeatsStyle,
+                  localStyles.inputHalfWidth,
+                ]}
+                _maxLength={50}
+              />
+            </View>
           </View>
-
-          <View style={localStyles.inputRow}>
-            {/*POSTI DONNA*/}
-            <EInput
-              placeHolder={strings.womanSeats}
-              keyBoardType={"number-pad"}
-              _value={womanSeats}
-              autoCapitalize={"none"}
-              toGetTextFieldValue={onChangedWomanSeats}
-              inputContainerStyle={[
-                { backgroundColor: colors.inputBg, marginRight: 10 },
-                localStyles.inputContainerPriceAndSeatsStyle,
-                localStyles.inputHalfWidth,
-              ]}
-              _maxLength={50}
-            />
-            {/*PREZZO DONNA*/}
-            <EInput
-              placeHolder={strings.womanPrice}
-              keyBoardType={"number-pad"}
-              _value={womanPrice}
-              autoCapitalize={"none"}
-              toGetTextFieldValue={onChangedWomanPrice}
-              inputContainerStyle={[
-                { backgroundColor: colors.inputBg },
-                localStyles.inputContainerPriceAndSeatsStyle,
-                localStyles.inputHalfWidth,
-              ]}
-              _maxLength={50}
-            />
-          </View>
-        </KeyBoardAvoidWrapper>
+        </KeyboardAwareScrollView>
 
         {/*COVER*/}
         <CoverImage

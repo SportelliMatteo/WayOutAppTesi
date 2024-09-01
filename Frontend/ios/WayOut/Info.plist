@@ -4,11 +4,6 @@
 <dict>
 	<key>CFBundleAllowMixedLocalizations</key>
 	<string>true</string>
-	<key>CFBundleLocalizations</key>
-	<array>
-		<string>en</string>
-		<string>it</string>
-	</array>
 	<key>CFBundleDisplayName</key>
 	<string>WayOut</string>
 	<key>CFBundleExecutable</key>
@@ -17,6 +12,11 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>it</string>
+	</array>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
@@ -41,16 +41,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
+	<dict/>
 	<key>NSCameraUsageDescription</key>
 	<string>We need access to your camera to...</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
