@@ -11,6 +11,7 @@ import store from "./src/redux/store";
 import { address } from "./src/assets/globalVar";
 import auth from "@react-native-firebase/auth";
 import { UserLoggedContext } from "./src/context/UserLoggedContext";
+import { LogBox } from "react-native";
 
 const userLoggedAddress = `http://${address}:8080/user-logged`;
 

@@ -11,12 +11,12 @@ export default {
     next: 'Avanti',
     //other
     onBoardingTitle1: `Scegli l'evento`,
-    onBoardingTitle2: 'Entra nel gruppo',
+    onBoardingTitle2: 'Paga ed entra nella chat di gruppo',
     onBoardingTitle3: "Esci e divertiti",
     onBoardingDesc1:
-      `Seleziona la città e successivamente l'evento al quale vorresti andare`,
+      `Seleziona l'evento al quale vorresti andare nelle tue vicinanze`,
     onBoardingDesc2:
-      `Unisciti al tavolo e attendi l'inserimento nel gruppo`,
+      `Paga e unisciti alla chat di gruppo con gli partecipanti per iniziare a fare amicizia`,
     onBoardingDesc3:
       'Organizzati con i tuoi nuovi amici tramite la chat, esci e goditi la serata',
     setLocation: 'Imposta località',

@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3f0b5146-2333-4420-a88d-1b3f1892e667" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wayout/controller/EventController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wayout/controller/EventController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wayout/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wayout/controller/PaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wayout/dao/EventDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wayout/dao/EventDao.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wayout/dao/EventDaoJDBC.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wayout/dao/EventDaoJDBC.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/wayout/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/wayout/model/Event.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/assets/images/onBordingImg1.png" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/assets/images/onBordingImg1.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/assets/images/onBordingImg2.png" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/assets/images/onBordingImg2.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/assets/images/onBordingImg3.png" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/assets/images/onBordingImg3.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/containers/OnBoarding.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/containers/OnBoarding.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Frontend/src/containers/tabbar/home/EventDetail.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Frontend/src/containers/tabbar/home/EventDetail.js" afterDir="false" />
-    </list>
+    <list default="true" id="3f0b5146-2333-4420-a88d-1b3f1892e667" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
